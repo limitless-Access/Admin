@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elon Reeves Musk Fan Forum — Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --surface: #f7f9fc;
+  --surface2: #eef2f8;
+  --border: #d0d8e8;
+  --border-hi: #3b82f6;
+  --blue: #1d4ed8;
+  --blue-bright: #2563eb;
+  --blue-soft: #3b82f6;
+  --blue-light: #dbeafe;
+  --text: #0f172a;
+  --text-soft: #334155;
+  --text-muted: #64748b;
+  --danger: #dc2626;
+  --success: #059669;
+  --warn: #d97706;
+  --pending-bg: #fff7ed;
+  --pending-cl: #c2410c;
+  --approved-bg: #ecfdf5;
+  --approved-cl: #047857;
+  --rejected-bg: #fef2f2;
+  --rejected-cl: #b91c1c;
+  --pay-bg: #eff6ff;
+  --pay-cl: #1d4ed8;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+
+/* LOGIN */
+#loginScreen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; background: linear-gradient(160deg, #eff6ff, #ffffff 50%, #f8fafc);
+  padding: 24px;
+}
+.login-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 12px;
+  padding: 40px 36px; width: 100%; max-width: 400px;
+  box-shadow: 0 20px 50px rgba(29, 78, 216, 0.08);
+}
+.login-brand {
+  font-family: 'Cinzel Decorative', serif; font-size: 1.15rem; color: var(--blue);
+  text-align: center; letter-spacing: 0.06em; margin-bottom: 6px;
+}
+.login-sub {
+  text-align: center; color: var(--text-muted); font-size: 0.8rem;
+  margin-bottom: 28px; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.login-field { margin-bottom: 16px; }
+.login-field label {
+  display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-soft); margin-bottom: 6px;
+}
+.login-field input {
+  width: 100%; padding: 12px 14px; border: 1px solid var(--border);
+  border-radius: 6px; font-size: 0.95rem; color: var(--text); outline: none;
+  background: var(--surface);
+}
+.login-field input:focus { border-color: var(--blue-soft); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+.login-btn {
+  width: 100%; margin-top: 8px; padding: 13px;
+  background: var(--blue); color: #fff; border: none; border-radius: 6px;
+  font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 0.2em;
+  font-weight: 700; cursor: pointer; text-transform: uppercase;
+}
+.login-btn:hover { background: #1e40af; }
+
+/* TOPBAR */
+.topbar {
+  height: 60px; background: #fff; border-bottom: 2px solid var(--blue-light);
+  display: none; align-items: center; justify-content: space-between;
+  padding: 0 24px; position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 12px rgba(29,78,216,0.06);
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.logo-mark {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: var(--blue); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+}
+.topbar-brand {
+  font-family: 'Cinzel', serif; font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.12em; color: var(--text); text-transform: uppercase;
+}
+.topbar-sub {
+  font-size: 0.6rem; letter-spacing: 0.14em; color: var(--blue);
+  text-transform: uppercase; margin-top: 1px;
+}
+.topbar-right { display: flex; align-items: center; gap: 16px; }
+.live-badge {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.62rem; letter-spacing: 0.14em; color: var(--success); text-transform: uppercase; font-weight: 700;
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--success);
+  animation: pulse 1.4s ease-in-out infinite; box-shadow: 0 0 8px var(--success);
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.topbar-clock { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.04em; }
+.logout-btn {
+  font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted); background: transparent; border: 1px solid var(--border);
+  padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 600;
+}
+.logout-btn:hover { color: var(--danger); border-color: var(--danger); }
+
+/* LAYOUT */
+.layout { display: none; flex: 1; min-height: 0; }
+.sidebar {
+  width: 210px; flex-shrink: 0; background: var(--surface);
+  border-right: 1px solid var(--border); padding: 20px 0;
+  position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto;
+}
+.nav-section-lbl {
+  font-size: 0.58rem; letter-spacing: 0.2em; color: var(--text-muted);
+  text-transform: uppercase; padding: 14px 18px 6px; font-weight: 700;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 11px 18px;
+  cursor: pointer; border-left: 3px solid transparent; font-size: 0.82rem;
+  font-weight: 600; color: var(--text-soft); transition: all 0.15s;
+}
+.nav-item:hover { background: #fff; color: var(--blue); }
+.nav-item.active { background: #fff; color: var(--blue); border-left-color: var(--blue); }
+.nav-badge {
+  margin-left: auto; background: var(--blue-light); color: var(--blue);
+  font-size: 0.65rem; padding: 2px 8px; border-radius: 10px; font-weight: 700;
+}
+.nav-badge.alert { background: #fee2e2; color: var(--danger); }
+
+.main { flex: 1; min-width: 0; padding: 28px 30px; overflow-y: auto; background: var(--bg); }
+
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
+.page-title {
+  font-family: 'Cinzel Decorative', serif; font-size: 1.35rem; color: var(--text);
+  letter-spacing: 0.04em; margin-bottom: 4px;
+}
+.page-sub { font-size: 0.9rem; color: var(--text-muted); font-style: italic; }
+.header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.btn {
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 9px 16px; border-radius: 5px; cursor: pointer; font-weight: 700; border: none;
+}
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: #1e40af; }
+.btn-ghost { background: #fff; color: var(--text-soft); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+.btn-pay { background: #1d4ed8; color: #fff; }
+.btn-pay:hover { background: #1e3a8a; }
+
+/* STATS */
+.stats-row {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 22px;
+}
+@media(max-width:1000px){ .stats-row { grid-template-columns: repeat(2, 1fr); } }
+.stat-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px 18px; border-top: 3px solid var(--accent, var(--blue));
+}
+.stat-card.total { --accent: var(--blue); }
+.stat-card.pending { --accent: var(--warn); }
+.stat-card.approved { --accent: var(--success); }
+.stat-card.rejected { --accent: var(--danger); }
+.stat-card.payments { --accent: #7c3aed; }
+.stat-lbl {
+  font-size: 0.62rem; letter-spacing: 0.14em; color: var(--text-muted);
+  text-transform: uppercase; font-weight: 700; margin-bottom: 8px;
+}
+.stat-val {
+  font-family: 'Cinzel', serif; font-size: 1.9rem; font-weight: 700;
+  color: var(--text); line-height: 1;
+}
+
+/* SECTION */
+.section-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 8px;
+  margin-bottom: 20px; overflow: hidden;
+}
+.section-header {
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  background: var(--surface);
+}
+.section-title {
+  font-size: 0.78rem; letter-spacing: 0.12em; color: var(--text);
+  text-transform: uppercase; font-weight: 700;
+}
+.filter-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-input, .filter-select {
+  background: #fff; border: 1px solid var(--border); border-radius: 5px;
+  padding: 8px 12px; color: var(--text); font-size: 0.8rem; outline: none;
+}
+.filter-input { min-width: 180px; }
+.filter-input:focus, .filter-select:focus { border-color: var(--blue-soft); }
+
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--surface2); }
+th {
+  font-size: 0.62rem; letter-spacing: 0.12em; color: var(--text-muted);
+  text-transform: uppercase; padding: 11px 12px; text-align: left; font-weight: 700;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 12px; border-bottom: 1px solid #eef2f7; font-size: 0.84rem;
+  color: var(--text-soft); vertical-align: middle;
+}
+tr.app-row { cursor: pointer; }
+tr.app-row:hover td { background: #f0f7ff; color: var(--text); }
+.td-name { font-weight: 700; color: var(--text); font-size: 0.92rem; }
+.td-id { font-family: 'Cinzel', serif; font-size: 0.72rem; color: var(--blue); font-weight: 700; }
+.status-pill {
+  display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px;
+  border-radius: 20px; font-size: 0.62rem; letter-spacing: 0.08em; font-weight: 700; text-transform: uppercase;
+}
+.status-pill.pending { background: var(--pending-bg); color: var(--pending-cl); }
+.status-pill.approved { background: var(--approved-bg); color: var(--approved-cl); }
+.status-pill.rejected { background: var(--rejected-bg); color: var(--rejected-cl); }
+.pill-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pay-pill {
+  display: inline-block; padding: 3px 8px; border-radius: 4px;
+  background: var(--pay-bg); color: var(--pay-cl); font-size: 0.65rem;
+  font-weight: 700; letter-spacing: 0.04em;
+}
+.pay-pill.replied { background: var(--approved-bg); color: var(--approved-cl); }
+.action-btns { display: flex; gap: 5px; flex-wrap: wrap; }
+.action-btn {
+  font-size: 0.6rem; letter-spacing: 0.06em; padding: 5px 9px; border-radius: 4px;
+  cursor: pointer; font-weight: 700; text-transform: uppercase; border: none;
+}
+.action-btn.view { background: var(--blue-light); color: var(--blue); }
+.action-btn.approve { background: var(--approved-bg); color: var(--approved-cl); }
+.action-btn.reject { background: var(--rejected-bg); color: var(--rejected-cl); }
+.action-btn.delete { background: #f1f5f9; color: var(--text-muted); }
+.action-btn.pay { background: #ede9fe; color: #6d28d9; }
+.action-btn:hover { filter: brightness(0.95); }
+
+.empty-state { padding: 48px 20px; text-align: center; color: var(--text-muted); }
+.empty-txt { font-style: italic; font-size: 1rem; }
+
+/* MODAL */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.45);
+  backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(15,23,42,0.18);
+}
+.modal-header {
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  background: var(--surface);
+}
+.modal-title { font-family: 'Cinzel', serif; font-size: 1.05rem; color: var(--text); margin-bottom: 3px; }
+.modal-vip { font-size: 0.7rem; letter-spacing: 0.12em; color: var(--blue); font-weight: 700; }
+.modal-close {
+  background: #fff; border: 1px solid var(--border); color: var(--text-muted);
+  width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 14px;
+}
+.modal-body { padding: 22px; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+@media(max-width:560px){ .detail-grid { grid-template-columns: 1fr; } }
+.detail-field { display: flex; flex-direction: column; gap: 3px; }
+.detail-lbl { font-size: 0.6rem; letter-spacing: 0.12em; color: var(--blue); text-transform: uppercase; font-weight: 700; }
+.detail-val { font-size: 0.95rem; color: var(--text); font-weight: 600; }
+.devotion-block, .modal-sig-preview, .modal-passport-preview {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+  padding: 14px; margin-bottom: 16px;
+}
+.devotion-lbl, .sig-lbl {
+  font-size: 0.6rem; letter-spacing: 0.12em; color: var(--blue);
+  text-transform: uppercase; font-weight: 700; margin-bottom: 6px;
+}
+.devotion-text { font-size: 0.95rem; color: var(--text-soft); font-style: italic; line-height: 1.6; }
+.passport-thumb {
+  width: 90px; height: 110px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border);
+}
+.passport-no-img {
+  width: 90px; height: 110px; background: var(--surface2); border: 1px dashed var(--border);
+  border-radius: 4px; display: flex; align-items: center; justify-content: center; opacity: 0.5;
+}
+.modal-actions {
+  display: flex; gap: 8px; padding: 14px 22px; border-top: 1px solid var(--border);
+  background: var(--surface); flex-wrap: wrap;
+}
+
+/* PAYMENT REPLY BOX */
+.pay-reply-box {
+  background: #f5f3ff; border: 1px solid #c4b5fd; border-radius: 8px;
+  padding: 16px; margin-top: 12px;
+}
+.pay-reply-box textarea {
+  width: 100%; min-height: 80px; border: 1px solid #c4b5fd; border-radius: 6px;
+  padding: 10px; font-size: 0.9rem; color: var(--text); outline: none; resize: vertical;
+  font-family: inherit; margin: 8px 0;
+}
+.pay-reply-box textarea:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+
+/* TOAST */
+#toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--blue);
+  padding: 12px 16px; border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  font-size: 0.85rem; color: var(--text); min-width: 240px; animation: toastIn 0.3s ease;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.warn { border-left-color: var(--warn); }
+.toast.danger { border-left-color: var(--danger); }
+@keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+
+/* CONFIRM */
+#confirmOverlay .modal-box { max-width: 400px; text-align: center; }
+#confirmOverlay .modal-body { padding: 28px 22px; }
+.confirm-icon { font-size: 36px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-brand">Elon Reeves Musk</div>
+    <div class="login-sub">Fan Forum · Admin Portal</div>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="admin 11" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar" id="mainTopbar">
+  <div class="topbar-left">
+    <div class="logo-mark">ER</div>
+    <div>
+      <div class="topbar-brand">Elon Reeves Musk Fan Forum</div>
+      <div class="topbar-sub">Admin Dashboard</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="live-badge"><span class="live-dot"></span> Live</div>
+    <div class="topbar-clock" id="topClock"></div>
+    <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout" id="mainLayout">
+  <aside class="sidebar">
+    <div class="nav-section-lbl">Applications</div>
+    <div class="nav-item active" onclick="setView('applications', this)">
+      <span>◈</span> All Applications <span class="nav-badge" id="navBadgeAll">0</span>
+    </div>
+    <div class="nav-item" onclick="setView('pending', this)">
+      <span>⏳</span> Pending <span class="nav-badge" id="navBadgePending">0</span>
+    </div>
+    <div class="nav-item" onclick="setView('approved', this)">
+      <span>✓</span> Approved <span class="nav-badge" id="navBadgeApproved">0</span>
+    </div>
+    <div class="nav-item" onclick="setView('rejected', this)">
+      <span>✕</span> Rejected <span class="nav-badge" id="navBadgeRejected">0</span>
+    </div>
+    <div class="nav-section-lbl">Payments</div>
+    <div class="nav-item" onclick="setView('payments', this)">
+      <span>💳</span> Payment Requests <span class="nav-badge alert" id="navBadgePayments">0</span>
+    </div>
+    <div class="nav-section-lbl">Tools</div>
+    <div class="nav-item" onclick="exportCSV()">
+      <span>↓</span> Export CSV
+    </div>
+    <div class="nav-item" onclick="clearAllData()">
+      <span>🗑</span> Clear All Data
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title" id="pageTitle">All Applications</div>
+        <div class="page-sub">Applications submitted from the fan forum appear here in real time</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-ghost" onclick="refreshFromServer()">↻ Refresh</button>
+        <button class="btn btn-pay" onclick="setView('payments', document.querySelectorAll('.nav-item')[4])">💳 Payment Requests</button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card total">
+        <div class="stat-lbl">Total</div>
+        <div class="stat-val" id="statTotal">0</div>
+      </div>
+      <div class="stat-card pending">
+        <div class="stat-lbl">Pending</div>
+        <div class="stat-val" id="statPending">0</div>
+      </div>
+      <div class="stat-card approved">
+        <div class="stat-lbl">Approved</div>
+        <div class="stat-val" id="statApproved">0</div>
+      </div>
+      <div class="stat-card rejected">
+        <div class="stat-lbl">Rejected</div>
+        <div class="stat-val" id="statRejected">0</div>
+      </div>
+      <div class="stat-card payments">
+        <div class="stat-lbl">Pay Requests</div>
+        <div class="stat-val" id="statPayments">0</div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title" id="tableTitle">Applications</div>
+        <div class="filter-bar">
+          <input class="filter-input" id="searchInput" type="text" placeholder="Search name, email, VIP code…" oninput="refreshView()">
+          <select class="filter-select" id="tierFilter" onchange="refreshView()">
+            <option value="">All Tiers</option>
+            <option value="Tier I">Tier I — Luminary</option>
+            <option value="Tier II">Tier II — Prestige</option>
+            <option value="Tier III">Tier III — Elite</option>
+            <option value="Tier IV">Tier IV — Icon Circle</option>
+          </select>
+          <select class="filter-select" id="sortFilter" onchange="refreshView()">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="name">Name A–Z</option>
+          </select>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>VIP Code</th>
+              <th>Applicant</th>
+              <th>Tier</th>
+              <th>Interest</th>
+              <th>Nationality</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appTableBody"></tbody>
+        </table>
+        <div class="empty-state" id="emptyState" style="display:none;">
+          <div class="empty-txt">No applications found</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- APP DETAIL MODAL -->
+<div class="modal-overlay" id="appModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalApplicantName">—</div>
+        <div class="modal-vip" id="modalVipCode">VIP CODE: #—</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid" id="modalDetailGrid"></div>
+      <div class="devotion-block">
+        <div class="devotion-lbl">Membership Statement</div>
+        <div class="devotion-text" id="modalDevotion">—</div>
+      </div>
+      <div class="modal-passport-preview">
+        <div class="devotion-lbl">Identity Photo</div>
+        <div id="modalPassportImg"></div>
+      </div>
+      <div class="modal-sig-preview">
+        <div class="sig-lbl">Signature</div>
+        <img id="modalSigImg" style="max-width:100%; max-height:100px; display:none;" alt="Signature">
+        <div id="modalNoSig" style="color:var(--text-muted); font-style:italic;">No signature</div>
+      </div>
+      <div id="modalPaySection" style="display:none;"></div>
+    </div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal-box">
+    <div class="modal-body">
+      <div class="confirm-icon" id="confirmIcon">⚠️</div>
+      <div class="modal-title" id="confirmTitle" style="text-align:center;">Confirm</div>
+      <p id="confirmMsg" style="color:var(--text-soft); margin:12px 0 20px; text-align:center;"></p>
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="btn btn-primary" id="confirmYesBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+const JSONBIN_BIN_ID  = '6a2b8607da38895dfeb27f21';
+const JSONBIN_API_KEY = '$2a$10$Up7hiB8jaJdNL0mEVQyC1uHG9hpBLH3S.czl/x7lwc0Qehty3QtOi';
+const JSONBIN_URL     = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+
+let applications = [];
+let currentView = 'applications';
+let confirmCallback = null;
+let autoRefreshTimer = null;
+
+const ADMIN_USER = 'admin 11';
+const ADMIN_PASS = '202030';
+
+async function loadApps() {
+  try {
+    const res = await fetch(`${JSONBIN_URL}/latest`, {
+      headers: { 'X-Access-Key': JSONBIN_API_KEY }
+    });
+    if (!res.ok) throw new Error('Failed to fetch');
+    const data = await res.json();
+    let records = Array.isArray(data.record) ? data.record : [];
+    records = records.filter(r => r && r.id !== 0);
+    applications = records;
+    return true;
+  } catch (e) {
+    console.error(e);
+    toast('Unable to reach server', 'danger');
+    return false;
+  }
+}
+
+async function saveApps() {
+  try {
+    const res = await fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Key': JSONBIN_API_KEY
+      },
+      body: JSON.stringify(applications.length ? applications : [{ id: 0, _init: true }])
+    });
+    if (!res.ok) throw new Error('Failed to save');
+    return true;
+  } catch (e) {
+    console.error(e);
+    toast('Failed to save changes', 'danger');
+    return false;
+  }
+}
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainTopbar').style.display = 'flex';
+    document.getElementById('mainLayout').style.display = 'flex';
+    startClock();
+    toast('Welcome back, Admin', 'success');
+    refreshFromServer();
+    autoRefreshTimer = setInterval(refreshFromServer, 20000);
+  } else {
+    toast('Invalid credentials', 'danger');
+    document.getElementById('loginPass').value = '';
+  }
+}
+
+async function refreshFromServer() {
+  const ok = await loadApps();
+  if (ok) { updateStats(); refreshView(); }
+}
+
+function doLogout() {
+  showConfirm('Sign Out', 'Sign out of the admin portal?', '🔒', () => {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('mainTopbar').style.display = 'none';
+    document.getElementById('mainLayout').style.display = 'none';
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+  });
+}
+
+function startClock() {
+  function tick() {
+    const now = new Date();
+    document.getElementById('topClock').textContent =
+      now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase() +
+      '  |  ' + now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+function updateStats() {
+  const total = applications.length;
+  const pending = applications.filter(a => a.status === 'pending').length;
+  const approved = applications.filter(a => a.status === 'approved').length;
+  const rejected = applications.filter(a => a.status === 'rejected').length;
+  const payments = applications.filter(a => a.paymentRequest && a.paymentStatus !== 'replied').length;
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('statApproved').textContent = approved;
+  document.getElementById('statRejected').textContent = rejected;
+  document.getElementById('statPayments').textContent = payments;
+
+  document.getElementById('navBadgeAll').textContent = total;
+  document.getElementById('navBadgePending').textContent = pending;
+  document.getElementById('navBadgeApproved').textContent = approved;
+  document.getElementById('navBadgeRejected').textContent = rejected;
+  document.getElementById('navBadgePayments').textContent = payments;
+  document.getElementById('navBadgePayments').className = payments > 0 ? 'nav-badge alert' : 'nav-badge';
+}
+
+function setView(view, el) {
+  currentView = view;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const titles = {
+    applications: 'All Applications',
+    pending: 'Pending Review',
+    approved: 'Approved Members',
+    rejected: 'Rejected Applications',
+    payments: 'Payment Requests'
+  };
+  document.getElementById('pageTitle').textContent = titles[view] || 'Applications';
+  document.getElementById('tableTitle').textContent = titles[view] || 'Applications';
+  refreshView();
+}
+
+function refreshView() {
+  const search = (document.getElementById('searchInput').value || '').toLowerCase();
+  const tier = document.getElementById('tierFilter').value;
+  const sort = document.getElementById('sortFilter').value;
+  let list = [...applications];
+
+  if (currentView === 'payments') {
+    list = list.filter(a => a.paymentRequest);
+  } else if (currentView !== 'applications') {
+    list = list.filter(a => a.status === currentView);
+  }
+
+  if (search) {
+    list = list.filter(a =>
+      (a.fullName || '').toLowerCase().includes(search) ||
+      (a.email || '').toLowerCase().includes(search) ||
+      (a.celebrity || '').toLowerCase().includes(search) ||
+      (a.nationality || '').toLowerCase().includes(search) ||
+      String(a.id).includes(search)
+    );
+  }
+  if (tier) list = list.filter(a => (a.tier || '').includes(tier));
+
+  if (sort === 'oldest') list.sort((a, b) => (a.receivedAt || 0) - (b.receivedAt || 0));
+  else if (sort === 'name') list.sort((a, b) => (a.fullName || '').localeCompare(b.fullName || ''));
+  else list.sort((a, b) => (b.receivedAt || 0) - (a.receivedAt || 0));
+
+  renderTable(list);
+}
+
+function paymentLabel(type) {
+  if (type === 'bank') return 'Bank Details';
+  if (type === 'crypto') return 'Crypto Wallet';
+  if (type === 'giftcard') return 'Gift Card';
+  return type || '—';
+}
+
+function renderTable(list) {
+  const tbody = document.getElementById('appTableBody');
+  const empty = document.getElementById('emptyState');
+  tbody.innerHTML = '';
+  if (list.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  list.forEach(app => {
+    const tr = document.createElement('tr');
+    tr.className = 'app-row';
+    tr.onclick = () => openModal(app.id);
+
+    let payCell = '—';
+    if (app.paymentRequest) {
+      const cls = app.paymentStatus === 'replied' ? 'pay-pill replied' : 'pay-pill';
+      const label = paymentLabel(app.paymentRequest);
+      const st = app.paymentStatus === 'replied' ? 'Replied' : 'Requested';
+      payCell = `<span class="${cls}">${label} · ${st}</span>`;
+    }
+
+    tr.innerHTML = `
+      <td><span class="td-id">#${app.id}</span></td>
+      <td>
+        <div class="td-name">${esc(app.fullName)}</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);">${esc(app.email)}</div>
+      </td>
+      <td style="font-size:0.75rem;font-weight:600;">${esc(app.tier)}</td>
+      <td>${esc(app.celebrity)}</td>
+      <td>${esc(app.nationality)}</td>
+      <td style="white-space:nowrap;">${formatDate(app.appDate)}</td>
+      <td><span class="status-pill ${app.status}"><span class="pill-dot"></span>${cap(app.status)}</span></td>
+      <td>${payCell}</td>
+      <td>
+        <div class="action-btns" onclick="event.stopPropagation()">
+          <button class="action-btn view" onclick="openModal('${app.id}')">View</button>
+          ${app.paymentRequest && app.paymentStatus !== 'replied' ? `<button class="action-btn pay" onclick="openModal('${app.id}', true)">Reply Pay</button>` : ''}
+          ${app.status !== 'approved' ? `<button class="action-btn approve" onclick="changeStatus('${app.id}','approved')">✓</button>` : ''}
+          ${app.status !== 'rejected' ? `<button class="action-btn reject" onclick="changeStatus('${app.id}','rejected')">✕</button>` : ''}
+          <button class="action-btn delete" onclick="deleteApp('${app.id}')">🗑</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function openModal(id, focusPay) {
+  const app = applications.find(a => String(a.id) === String(id));
+  if (!app) return;
+
+  document.getElementById('modalApplicantName').textContent = app.fullName || '—';
+  document.getElementById('modalVipCode').textContent = `VIP CODE: #${app.id}`;
+
+  const fields = [
+    ['Gender', app.gender],
+    ['Date of Birth', app.dob],
+    ['Nationality', app.nationality],
+    ['Phone', app.phone],
+    ['Email', app.email],
+    ['Primary Interest', app.celebrity],
+    ['Tier', app.tier],
+    ['App. Date', formatDate(app.appDate)],
+    ['Status', cap(app.status)],
+    ['Received', app.receivedAt ? new Date(app.receivedAt).toLocaleString('en-GB') : '—'],
+  ];
+  document.getElementById('modalDetailGrid').innerHTML = fields.map(([l, v]) => `
+    <div class="detail-field">
+      <div class="detail-lbl">${l}</div>
+      <div class="detail-val">${esc(v || '—')}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('modalDevotion').textContent = app.devotion || '—';
+
+  const passportWrap = document.getElementById('modalPassportImg');
+  if (app.passportImg) {
+    passportWrap.innerHTML = `<img class="passport-thumb" src="${app.passportImg}" alt="ID photo">`;
+  } else {
+    passportWrap.innerHTML = `<div class="passport-no-img">📷</div>`;
+  }
+
+  const sigImg = document.getElementById('modalSigImg');
+  const noSig = document.getElementById('modalNoSig');
+  if (app.signature) {
+    sigImg.src = app.signature;
+    sigImg.style.display = 'block';
+    noSig.style.display = 'none';
+  } else {
+    sigImg.style.display = 'none';
+    noSig.style.display = 'block';
+  }
+
+  // Payment section
+  const paySec = document.getElementById('modalPaySection');
+  if (app.paymentRequest) {
+    paySec.style.display = 'block';
+    const alreadyReplied = app.paymentStatus === 'replied' && app.paymentReply;
+    paySec.innerHTML = `
+      <div class="pay-reply-box">
+        <div class="devotion-lbl">Payment Request · VIP #${app.id}</div>
+        <div style="margin:6px 0 10px; font-weight:700; color:var(--text);">
+          Type: ${paymentLabel(app.paymentRequest)}
+          ${alreadyReplied ? ' · <span style="color:var(--success)">Already Replied</span>' : ' · <span style="color:var(--warn)">Awaiting Reply</span>'}
+        </div>
+        ${alreadyReplied ? `<div style="background:#fff;border:1px solid #c4b5fd;padding:10px;border-radius:6px;margin-bottom:10px;font-size:0.9rem;">${esc(app.paymentReply)}</div>` : ''}
+        <label style="font-size:0.7rem;font-weight:700;color:#6d28d9;text-transform:uppercase;letter-spacing:0.08em;">
+          ${alreadyReplied ? 'Update / Resend Payment Details' : 'Reply with Payment Details (bank / wallet / gift card info)'}
+        </label>
+        <textarea id="payReplyText" placeholder="e.g. Bank: Chase · Account: 123456789 · Routing: 021000021&#10;or Wallet: 0xABC... &#10;or Gift card instructions...">${alreadyReplied ? esc(app.paymentReply) : ''}</textarea>
+        <button class="btn btn-pay" onclick="sendPaymentReply('${app.id}')">Send Reply to Applicant</button>
+      </div>
+    `;
+  } else {
+    paySec.style.display = 'none';
+    paySec.innerHTML = '';
+  }
+
+  const actions = document.getElementById('modalActions');
+  actions.innerHTML = `
+    ${app.status !== 'approved' ? `<button class="btn btn-primary" onclick="changeStatus('${app.id}','approved'); closeModal()">✓ Approve</button>` : ''}
+    ${app.status !== 'rejected' ? `<button class="btn btn-ghost" style="color:var(--danger);border-color:#fecaca;" onclick="changeStatus('${app.id}','rejected'); closeModal()">✕ Reject</button>` : ''}
+    <button class="btn btn-ghost" style="margin-left:auto;" onclick="deleteApp('${app.id}'); closeModal()">🗑 Delete</button>
+  `;
+
+  document.getElementById('appModal').classList.add('open');
+  if (focusPay && app.paymentRequest) {
+    setTimeout(() => {
+      const ta = document.getElementById('payReplyText');
+      if (ta) ta.focus();
+    }, 200);
+  }
+}
+
+function closeModal() {
+  document.getElementById('appModal').classList.remove('open');
+}
+
+async function sendPaymentReply(id) {
+  const app = applications.find(a => String(a.id) === String(id));
+  if (!app) return;
+  const text = (document.getElementById('payReplyText')?.value || '').trim();
+  if (!text) { toast('Please enter payment details before sending', 'warn'); return; }
+
+  app.paymentReply = text;
+  app.paymentStatus = 'replied';
+  app.paymentRepliedAt = Date.now();
+
+  const ok = await saveApps();
+  if (ok) {
+    toast(`Payment details sent for VIP #${id}`, 'success');
+    updateStats();
+    refreshView();
+    openModal(id); // refresh modal
+  }
+}
+
+async function changeStatus(id, status) {
+  const app = applications.find(a => String(a.id) === String(id));
+  if (!app) return;
+  app.status = status;
+  updateStats();
+  refreshView();
+  const ok = await saveApps();
+  if (ok) toast(`Application #${id} marked as ${status}`, status === 'approved' ? 'success' : 'warn');
+}
+
+async function deleteApp(id) {
+  showConfirm('Delete Application', `Permanently delete application #${id}?`, '🗑️', async () => {
+    applications = applications.filter(a => String(a.id) !== String(id));
+    updateStats();
+    refreshView();
+    const ok = await saveApps();
+    if (ok) toast(`Application #${id} deleted`, 'danger');
+  });
+}
+
+function clearAllData() {
+  showConfirm('Clear All Data', 'This will permanently delete ALL applications and payment requests.', '⚠️', async () => {
+    applications = [];
+    updateStats();
+    refreshView();
+    const ok = await saveApps();
+    if (ok) toast('All data cleared', 'danger');
+  });
+}
+
+function exportCSV() {
+  if (applications.length === 0) { toast('No data to export', 'warn'); return; }
+  const headers = ['VIP Code','Full Name','Gender','DOB','Nationality','Phone','Email','Interest','Tier','App Date','Status','Payment Request','Payment Status','Devotion'];
+  const rows = applications.map(a => [
+    a.id, a.fullName, a.gender, a.dob, a.nationality, a.phone, a.email,
+    a.celebrity, a.tier, a.appDate, a.status,
+    a.paymentRequest || '', a.paymentStatus || '',
+    `"${(a.devotion || '').replace(/"/g, '""')}"`
+  ].join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `erm-fan-forum-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV exported', 'success');
+}
+
+function showConfirm(title, msg, icon, cb) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmIcon').textContent = icon || '⚠️';
+  confirmCallback = cb;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  confirmCallback = null;
+}
+document.getElementById('confirmYesBtn').addEventListener('click', () => {
+  if (typeof confirmCallback === 'function') confirmCallback();
+  closeConfirm();
+});
+
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function cap(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''; }
+function formatDate(d) {
+  if (!d) return '—';
+  try { return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  catch (e) { return d; }
+}
+</script>
+</body>
+</html>
